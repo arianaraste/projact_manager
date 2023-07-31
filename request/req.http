@@ -1,4 +1,4 @@
-###Register Request
+###
 
 POST  http://localhost:3000/auth/register
 
@@ -11,13 +11,11 @@ POST  http://localhost:3000/auth/register
     "password" : "78627831",
     "confirm_passwoed" : "78627831"
 }
-###Login Request
+###
 POST  http://localhost:3000/auth/login
 Content-Type: application/json
 {
     "username" : "arianaraste",
-    "email" : "arian@gmail.com",
-    "mobile" : "09152056577",
     "password" : "78627831",
-    "confirm_passwoed" : "78627831"
+    
 }

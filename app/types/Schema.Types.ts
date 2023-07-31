@@ -1,4 +1,4 @@
-import { DefaultType, ObjectId } from "mongoose";
+import mongoose, { DefaultType, Document, ObjectId } from "mongoose";
 
 export interface IUser extends Document {
     firstname : string ,
@@ -10,6 +10,7 @@ export interface IUser extends Document {
     password : string ,
     skills : DefaultType<Array<string>> ,
     teams : DefaultType<Array<string>>,
+    token : string
 };
 export interface ITeam extends Document {
     name : string,
