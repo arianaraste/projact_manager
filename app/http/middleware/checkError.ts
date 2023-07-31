@@ -1,7 +1,6 @@
 import { error } from "console";
 import { NextFunction, Request, Response } from "express";
 import { Result, ValidationError, validationResult } from "express-validator";
-import { checkError } from "../../types/General.type";
 
 export default function ExpressValidationResult (req : Request , res : Response , next : NextFunction): Response | undefined{
     let messages : Array<string> = [];

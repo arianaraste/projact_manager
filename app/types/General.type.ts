@@ -1,4 +1,4 @@
-import { type } from "os";
+
 
 export type ERR_Type = {
     err_type : string ,
@@ -6,4 +6,3 @@ export type ERR_Type = {
     message : string ,
     data? : string
 };
-export type checkError = object[]
