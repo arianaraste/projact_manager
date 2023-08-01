@@ -1,4 +1,19 @@
 ###
 
 http://localhost:3000/user/profile
-Authorization: {{}}
+Authorization: {{}} ;
+
+###
+POST http://localhost:3000/user/profile 
+Content-Type: application/application/json
+{
+    "firstname" : "arian" ,
+    "lastname" : "araste" ,
+    "skills"  : []
+}
+###
+
+POST url HTTP/1.1
+header name: header value
+
+content

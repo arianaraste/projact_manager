@@ -39,6 +39,7 @@ export class ApplicationClass {
                 message : err?.message
             };
             console.log(DB_Error);
+            ;
         });
     };
     createRouter(){
@@ -58,7 +59,7 @@ export class ApplicationClass {
             return res.json(NotFundErr)
         });
         this.app.use((err : any , req : Request , res : Response , next : NextFunction)=>{
-            console.log(err);
+            
             
             const ServerERR : ERR_Type = {
                 err_type : "Server Error",

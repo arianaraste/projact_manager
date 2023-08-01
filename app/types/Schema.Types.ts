@@ -5,11 +5,11 @@ export interface IUser extends Document {
     lastname : string ,
     username  : string,
     mobile : string ,
-    roles : DefaultType<Array<string>>,
+    roles : string[],
     email : string ,
     password : string ,
-    skills : DefaultType<Array<string>> ,
-    teams : DefaultType<Array<string>>,
+    skills : string[] ,
+    teams : string[],
     token : string
 };
 export interface ITeam extends Document {

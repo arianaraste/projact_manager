@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { RegisterUser } from "../../types/auth.type";
+import { RegisterUser } from "../../types/user.type";
 import { Result, ValidationError, validationResult } from "express-validator";
 import { hashString, tokenGenreator } from "../../modules/function";
 import { IUser } from "../../types/Schema.Types";
