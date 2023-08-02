@@ -1,9 +1,8 @@
 import { genSaltSync, hashSync } from "bcrypt";
 import { JwtPayload, sign, verify } from "jsonwebtoken";
-import { Token } from "typescript";
 import { General } from "../types/enum";
-import { IUser } from "../types/Schema.Types";
-import { EditProfile } from "../types/user.type";
+import fs from "fs"
+import path from "path";
 
 export function hashString(str : string) : string {
     const salt : string = genSaltSync(10);
@@ -18,5 +17,15 @@ export function verifyToken(token : string):  JwtPayload | string {
     const result : JwtPayload | string = verify(token , General.SECRET_KEY);
     if(!result)throw {status : 401 , message : "لطفا وارد حساب کاربری خود شوید"};
     return result
+};
+export function createUploadPath(): string{
+    let date : Date = new Date();
+    const day : string = ""+date.getDate();
+    const month : string = ""+date.getMonth();
+    const year : string = ""+date.getFullYear();
+    const uploadPath : string = path.join(__dirname,".." , ".." , "public" , "upload" , year , month , day);
+    fs.mkdirSync(uploadPath , {recursive : true});
+    return path.join("public" , "upload" , year , month , day)
+    
 }
 

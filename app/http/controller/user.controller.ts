@@ -20,7 +20,7 @@ export class UserController{
             next(error)
         }
     }
-    static async editProfile(req : Request , res : Response , next : NextFunction){
+    static async editProfile(req : Request , res : Response , next : NextFunction):Promise<void>{
         try {
             const {firstname , lastname , skills} : EditProfile = req.body ;
             const UserID : IUser["_id"] = req?.user?._id;
@@ -46,8 +46,15 @@ export class UserController{
         } catch (error) {
             next(error)            
         }
-    }
-        
+    };
+    static async uploadProfileImage(req : Request , res : Response , next : NextFunction): Promise<void> {
+        try {
+            console.log(req.file);
+            
+        } catch (error) {
+           next(error) 
+        }
+    }    
     addSkil(){};
     editSkill(){};
     acceptInviteInTeam(){};
