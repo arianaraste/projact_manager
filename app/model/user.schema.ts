@@ -11,7 +11,8 @@ const UserSchema = new  mongoose.Schema<IUser>({
     password : {type : String , required : true},
     skills : {type : [String] , default : []},
     teams : {type : [mongoose.Types.ObjectId] , default : []} ,
-    token : {type : String , default : ""}
+    token : {type : String , default : ""},
+    profile_image : {type : String}
 
 } ,{
     timestamps : true

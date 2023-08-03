@@ -23,12 +23,13 @@ body("email").isEmail().withMessage("ایمیل وارد شد معتبر نیس�
 }) ,
 body("mobile").isMobilePhone("fa-IR").withMessage("شماره موبایل وارد شده معتبر نیست").custom(async mobile => {
     const mobileFinder : IUser["mobile"] | null = await UserModel.findOne({mobile});
-    if(mobileFinder)throw "شماره موبایل کاربربی قبلا استفاده شده است"
+    if(mobileFinder)throw "شماره موبایل کاربربی قبلا استفاده شده است";
+    return true
 }),
 body("password").isLength({min : 6 , max : 16}).withMessage("رمز عبور حداقل 6 و حداکثر 16 کارکتر میباشد").custom((value :string , {req})=>{
     if(!value) throw "رمز عبور نمیتواند خالی باشد";
     if(value !== req?.body?.confirm_password) throw "رمز عبور با تاییدیه آن یکسان نمی باشد";
-    
+    return true
     })
 ];
 export const ValidationLogin = () => [

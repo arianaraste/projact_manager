@@ -15,7 +15,7 @@ export const checkLogin = async(req : Request , res : Response , next : NextFunc
         const user : IUser | null = await UserModel.findOne( {username : result} , {password : 0});
         if(!user)throw err;
         req.user = user
-        next()
+        return next()
         
     } catch (error) {
         next(error)

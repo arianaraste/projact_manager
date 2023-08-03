@@ -10,7 +10,8 @@ export interface IUser extends Document {
     password : string ,
     skills : string[] ,
     teams : string[],
-    token : string
+    token : string,
+    profile_image : string
 };
 export interface ITeam extends Document {
     name : string,
