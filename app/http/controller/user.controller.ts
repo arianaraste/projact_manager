@@ -9,7 +9,7 @@ import { imageProfileValidation } from "../../modules/function";
 export class UserController{
     static getProfile(req : Request , res : Response , next : NextFunction ): Response<object> | undefined{
         try {
-            const user : Express.User | undefined = req.user;
+            const user : IUser | undefined = req.user    
             return res.status(200).json({
                 status : 200 ,
                 statae : "موفق" ,
@@ -51,11 +51,10 @@ export class UserController{
     static async uploadProfileImage(req : Request , res : Response , next : NextFunction): Promise<void> {
         try {
             imageProfileValidation(req.file);
-            console.log("!");
-            
             const userId : ObjectId = req?.user?._id;
-            const Imagepath : IUser["profile_image"] | undefined = req?.file?.path.substring(7);
-            const uploadImage = await UserModel.updateOne({_id : userId} , {$set : {profile_image : Imagepath}});
+            const Imagepath : IUser["profile_image"] | undefined = req?.file?.path.substring(7).replace(/[\\\\]/gm , "/");
+            const Image : string = req.protocol+ "://" + req.get("host") + "/" + Imagepath;      
+            const uploadImage = await UserModel.updateOne<IUser["profile_image"]>({_id : userId} , {$set : {profile_image : Image}});
             console.log(uploadImage.modifiedCount);
             if(uploadImage.modifiedCount == 0)throw {status : 400 , state : "ناموفق" , message : "عکس پروفایل بارگذاری نشد"};
             res.status(200).json({
