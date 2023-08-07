@@ -5,7 +5,6 @@ import fs from "fs"
 import path from "path";
 import { Request,NextFunction, Response } from "express";
 
-import multer from "multer";
 export function hashString(str : string) : string {
     const salt : string = genSaltSync(10);
     return hashSync(str , salt);
@@ -30,9 +29,9 @@ export function createUploadPath(): string{
     return path.join("public" , "upload" , year , month , day)
     
 };
-export  function imageProfileValidation(data : Express.Multer.File | undefined):void{
-    if(typeof data == "undefined")throw{status : 400 , state : "ناموفق" , message : "لطفا عکس مورد نظر خود را وارد کنید"};
-    return
-};
+// export  function imageProfileValidation(data : Express.Multer.File | undefined):void{
+//     if(typeof data == "undefined")throw{status : 400 , state : "ناموفق" , message : "لطفا عکس مورد نظر خود را وارد کنید"};
+//     return
+// };
 
 

@@ -4,7 +4,6 @@ import { ObjectId, UpdateWriteOpResult } from "mongoose";
 import { EditProfile, Updateprofile } from "../../types/user.type";
 import { body } from "express-validator";
 import { UserModel } from "../../model/user.schema";
-import { imageProfileValidation } from "../../modules/function";
 
 export class UserController{
     static getProfile(req : Request , res : Response , next : NextFunction ): Response<object> | undefined{
@@ -50,10 +49,9 @@ export class UserController{
     };
     static async uploadProfileImage(req : Request , res : Response , next : NextFunction): Promise<void> {
         try {
-            imageProfileValidation(req.file);
+            //imageProfileValidation(req.files);
             const userId : ObjectId = req?.user?._id;
-            const Imagepath : IUser["profile_image"] | undefined = req?.file?.path.substring(7).replace(/[\\\\]/gm , "/");
-            const Image : string = req.protocol+ "://" + req.get("host") + "/" + Imagepath;      
+            const Image : string = req.protocol+ "://" + req.get("host") + "/" + req.body.image;      
             const uploadImage = await UserModel.updateOne<IUser["profile_image"]>({_id : userId} , {$set : {profile_image : Image}});
             console.log(uploadImage.modifiedCount);
             if(uploadImage.modifiedCount == 0)throw {status : 400 , state : "ناموفق" , message : "عکس پروفایل بارگذاری نشد"};

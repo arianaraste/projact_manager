@@ -3,11 +3,12 @@ import { checkLogin } from "../http/middleware/checkLogin";
 import { UserController } from "../http/controller/user.controller";
 import ExpressValidationResult from "../http/middleware/checkError";
 import {validitionEditProfile } from "../http/validation/user.validation";
-import { upload } from "../modules/multer";
+import fileUpload from "express-fileupload";
+import {imgUpload} from "../modules/file_upload";
 
 export const router : Router = Router();
 
 router.get("/profile" , checkLogin , UserController.getProfile)
 router.post("/profile" ,checkLogin,validitionEditProfile(), ExpressValidationResult ,UserController.editProfile);
-router.post("/profile-image" ,checkLogin,upload.single("image"),UserController.uploadProfileImage);
+router.post("/profile-image" ,fileUpload() ,checkLogin , imgUpload , UserController.uploadProfileImage);
 
