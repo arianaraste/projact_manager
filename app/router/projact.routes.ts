@@ -9,4 +9,5 @@ import fileUpload from "express-fileupload";
 
 
 export const router : Router = Router();
-router.post("/create" ,fileUpload(), checkLogin ,creatProjectValidation(),ExpressValidationResult,imgUpload,ProjactController.creatProjact)
+router.post("/create" ,fileUpload(), checkLogin ,creatProjectValidation(),ExpressValidationResult,imgUpload,ProjactController.creatProjact);
+router.get("/get" , checkLogin ,ProjactController.getAllProjact)

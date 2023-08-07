@@ -25,6 +25,7 @@ export interface IProjact extends Document {
     img : string ,
     owner : ObjectId ,
     team : ObjectId ,
-    private : boolean
+    private : boolean,
+    tags : string[]
 };
         
