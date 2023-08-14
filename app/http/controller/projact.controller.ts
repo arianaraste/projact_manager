@@ -1,10 +1,10 @@
-import { NextFunction, Request, Response } from "express";
+import { NextFunction, Request, Response, response } from "express";
 import { ObjectId } from "mongoose";
 import { IProjact } from "../../types/Schema.Types";
-import { emitWarning } from "process";
 import { ProjactModel } from "../../model/projact.schema";
-import { promises } from "dns";
-import { get } from "http";
+import { lutimesSync } from "fs";
+import { UpdateProject } from "../../types/General.type";
+
 
 export class ProjactController{
     static async creatProjact(req: Request , res : Response , next : NextFunction) : Promise<void>{
@@ -60,7 +60,7 @@ export class ProjactController{
     };
     static async removeProjact(req : Request , res : Response , next : NextFunction):Promise<void>{
         try {
-            const owner : ObjectId = req.user?.id;
+        const owner : ObjectId = req.user?.id;
         const id : string = req.params.id;
         const findProject : IProjact | null  = await ProjactModel.findOne({owner , _id : id});
         if(!findProject)throw {status : 400 , state : "ناموفق" , message : "پروژه ایی یافت نشد"};
@@ -75,7 +75,44 @@ export class ProjactController{
             next(error)
         }
     };
+    static async updateProjact(req: Request , res : Response , next : NextFunction) : Promise<void>{
+        try {
+        const owner : ObjectId = req.user?._id;
+        const id : string = req.params.id;
+        const findProject : IProjact | null  = await ProjactModel.findOne({owner , _id : id});
+        const data = req.body;
+        const badvValue : any[] = ["" , " " , 0 , undefined , NaN , null];
+        const updateKey : string[] = ["title" ,  "text" , "tags"];
+        
+        (Object.keys(data) as (keyof typeof data)[]).forEach((key,index)=>{
+           
+            if(updateKey.includes(data)) delete data[key]
+            if(badvValue.includes(data[key])) delete data[key];
+        });
+        const tag : string[] = data.tags.split(" ");
+        data.tags = tag 
+        
+                
+            
+        
+        console.log(data);
+        
+
+        
+        const UpdateResult = await ProjactModel.updateOne<UpdateProject>({_id : id} , {$set : data});
+        if(UpdateResult.modifiedCount == 0)throw {status : 400 , state : "نامفق" , message : "بروزرسانی انجام نشد"};
+        res.status(200).json({
+            status : 200 ,
+            state : "موفق" ,
+            message : "بروزرسانی انجام شد"
+        });
+               
+
+        } catch (error) {
+            next(error)
+        }
+        
+    };
     getProjactOfTeam(){};
     getProjactOfUser(){};
-    updateProjact(){};
 } 

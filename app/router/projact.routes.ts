@@ -14,4 +14,4 @@ router.post("/create" ,fileUpload(), checkLogin ,creatProjectValidation(),Expres
 router.get("/list" , checkLogin ,ProjactController.getAllProjact);
 router.get("/get/:id" , checkLogin, idValidation() , ExpressValidationResult ,ProjactController.getProjactById)
 router.get("/remove/:id" , checkLogin, idValidation() , ExpressValidationResult ,ProjactController.removeProjact)
-// router.get("/update/:id" , checkLogin, idValidation() , ExpressValidationResult ,ProjactController.updare)
+router.put("/update/:id" , checkLogin, idValidation() , ExpressValidationResult ,ProjactController.updateProjact)
