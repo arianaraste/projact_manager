@@ -15,7 +15,7 @@ export async function imgUpload(req:Request , res:Response , next : NextFunction
         if(!format.includes(ext))throw{status : 400 , state : "ناموفق" , message : "فرمت عکس وارد شده نا معتبر است"}
         if(file.size > 2 *1024 * 1024 )throw {status : 400 , state : "ناموفق" , message : "حجم عکس بیش از 2 مگ میباشد"}
         let image_path : string = path.join(createUploadPath() +( Date.now() + path.extname(file.name)));
-        req.body.image = image_path
+        req.body.image = image_path.substring(7)
         let upload_path : string = path.join(__dirname , ".." , ".." , image_path);
         file.mv(upload_path , (err)=>{
             console.log(err);

@@ -4,11 +4,14 @@ import { ObjectId, UpdateWriteOpResult } from "mongoose";
 import { EditProfile, Updateprofile } from "../../types/user.type";
 import { body } from "express-validator";
 import { UserModel } from "../../model/user.schema";
+import { createLinkforFile } from "../../modules/function";
 
 export class UserController{
     static getProfile(req : Request , res : Response , next : NextFunction ): Response<object> | undefined{
         try {
-            const user : IUser | undefined = req.user    
+            const user : IUser | undefined = req.user 
+            if(!user)throw {status : 400 , state : "ناموفق" , message : "کاربری یافت نشد"}   
+            user?.profile_image == createLinkforFile(user?.profile_image , req)
             return res.status(200).json({
                 status : 200 ,
                 statae : "موفق" ,
@@ -51,7 +54,7 @@ export class UserController{
         try {
             //imageProfileValidation(req.files);
             const userId : ObjectId = req?.user?._id;
-            const Image : string = req.protocol+ "://" + req.get("host") + "/" + req.body.image;      
+            const Image : string = createLinkforFile(req.body.image , req)     
             const uploadImage = await UserModel.updateOne<IUser["profile_image"]>({_id : userId} , {$set : {profile_image : Image}});
             console.log(uploadImage.modifiedCount);
             if(uploadImage.modifiedCount == 0)throw {status : 400 , state : "ناموفق" , message : "عکس پروفایل بارگذاری نشد"};
