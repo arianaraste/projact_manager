@@ -17,7 +17,7 @@ export interface ITeam extends Document {
     name : string,
     username : string ,
     description : string ,
-    user : ObjectId,
+    memmber : ObjectId,
     owner : ObjectId
 };
 export interface IProjact extends Document {

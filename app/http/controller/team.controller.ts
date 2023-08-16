@@ -53,6 +53,23 @@ export class TeamController {
             next(error)
         }
     };
+    static async getMyTeam(req : Request , res  :Response , next : NextFunction ): Promise<void>{
+        try {
+            const userId : string = req.params.id;
+            const MyTeam: ITeam[] | null = await TeamModel.find({$or : [
+                {owner : userId},
+                {member : userId}
+            ]})
+            if(!MyTeam)throw{status : 404 , state : "ناموفق" , message : "شما عضو تیمی نیستید"};
+            res.status(200).json({
+                status : 200 ,
+                state : "موفق",
+                MyTeam
+            })
+        } catch (error) {
+            next(error)
+        }
+    };
     inviteUserToTeam(){};
     removeTeamByIdOf(){};
     updateTeam(){};
