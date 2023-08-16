@@ -8,4 +8,4 @@ import ExpressValidationResult from "../http/middleware/checkError";
 export const router : Router = Router();
 
 router.post("/create" , checkLogin , teamValidation() , ExpressValidationResult , TeamController.creatTeam)
-router.get("/list" , checkLogin)
+router.get("/list" , checkLogin , TeamController.getListTeam)

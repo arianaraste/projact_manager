@@ -1,6 +1,8 @@
 import { NextFunction, Request, Response } from "express";
 import { ObjectId } from "mongoose";
 import { TeamModel } from "../../model/team.schema";
+import { ITeam } from "../../types/Schema.Types";
+import { throws } from "assert";
 
 export class TeamController {
     static async creatTeam(req : Request , res : Response , next : NextFunction) : Promise<void>{
@@ -24,7 +26,18 @@ export class TeamController {
         }
     };
     static async getListTeam(req : Request , res : Response , next : NextFunction) : Promise<void>{
-        
+        try {
+            const teams : ITeam[] | undefined = await TeamModel.find({});
+            if(!teams)throw {status : 400 , state : "ناموفق" , message : "تیمی یافت نشد"};
+            res.status(200).json({
+                status : 200 ,
+                state : "موفق",
+                teams
+            })
+
+        } catch (error) {
+            next(error)
+        }
     };
     inviteUserToTeam(){}
     removeTeamByIdOf(){};
