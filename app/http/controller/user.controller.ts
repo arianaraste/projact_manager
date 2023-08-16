@@ -52,7 +52,7 @@ export class UserController{
     };
     static async uploadProfileImage(req : Request , res : Response , next : NextFunction): Promise<void> {
         try {
-            //imageProfileValidation(req.files);
+            
             const userId : ObjectId = req?.user?._id;
             const Image : string = createLinkforFile(req.body.image , req)     
             const uploadImage = await UserModel.updateOne<IUser["profile_image"]>({_id : userId} , {$set : {profile_image : Image}});

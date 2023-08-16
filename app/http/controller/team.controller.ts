@@ -39,7 +39,21 @@ export class TeamController {
             next(error)
         }
     };
-    inviteUserToTeam(){}
+    static async getTeamById(req : Request , res : Response , next : NextFunction) : Promise<void>{
+        try {
+            const id : string = req.params.id;
+            const team : ITeam | null = await TeamModel.findOne({_id : id});
+            if(!team)throw {status : 404 , state : "ناموفق" , message : "تیمی یافت نشد"};
+            res.status(200).json({
+                status : 200 , 
+                state : "موفق",
+                team
+            })
+        } catch (error) {
+            next(error)
+        }
+    };
+    inviteUserToTeam(){};
     removeTeamByIdOf(){};
     updateTeam(){};
 }
