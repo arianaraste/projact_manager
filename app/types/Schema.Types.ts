@@ -15,8 +15,9 @@ export interface IUser extends Document {
 };
 export interface ITeam extends Document {
     name : string,
+    username : string ,
     description : string ,
-    user : ObjectId ,
+    user : ObjectId,
     owner : ObjectId
 };
 export interface IProjact extends Document {

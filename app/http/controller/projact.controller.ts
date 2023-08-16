@@ -124,7 +124,7 @@ export class ProjactController{
         if(UpdateResult.modifiedCount == 0)throw {status : 400 , state : "نامفق" , message : "بروزرسانی انجام نشد"};
         res.status(200).json({
             status : 200 ,
-            state : "موفق" ,
+            state : "موفق" , 
             message : "بروزرسانی انجام شد"
         });
                
