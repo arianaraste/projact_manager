@@ -1,9 +1,9 @@
 import { NextFunction, Request, Response } from "express";
-import { ObjectId } from "mongoose";
 import { TeamModel } from "../../model/team.schema";
-import { ITeam } from "../../types/Schema.Types";
-import { throws } from "assert";
-
+import { ITeam, IUser, InviteRequest } from "../../types/Schema.Types";
+import { UserModel } from "../../model/user.schema";
+import { finderUserInTeam } from "../../modules/function";
+import mongoose, { ObjectId, isObjectIdOrHexString, isValidObjectId } from "mongoose";
 export class TeamController {
     static async creatTeam(req : Request , res : Response , next : NextFunction) : Promise<void>{
         try {
@@ -55,10 +55,14 @@ export class TeamController {
     };
     static async getMyTeam(req : Request , res  :Response , next : NextFunction ): Promise<void>{
         try {
-            const userId : string = req.params.id;
+            const UserId = new mongoose.Types.ObjectId("123")
+            //console.log(UserId);
+            console.log(typeof UserId);
+            
+            
             const MyTeam: ITeam[] | null = await TeamModel.find({$or : [
-                {owner : userId},
-                {member : userId}
+                {owner : UserId},
+                {member : UserId}
             ]})
             if(!MyTeam)throw{status : 404 , state : "ناموفق" , message : "شما عضو تیمی نیستید"};
             res.status(200).json({
@@ -70,7 +74,60 @@ export class TeamController {
             next(error)
         }
     };
-    inviteUserToTeam(){};
-    removeTeamByIdOf(){};
+    
+    static async inviteUserToTeam(req : Request , res : Response , next : NextFunction) : Promise<void>{
+        try {
+            const userID : ObjectId  = req.user?._id;            
+            const username = req.params.username
+            console.log(req.params.teamID);
+            const teamID =  req.params.teamID
+           
+            
+            
+           const team : boolean = await finderUserInTeam(teamID,userID);
+            if(!team)throw {status : 400 , state : "ناموفق" , message : "تیمی جهت دعوت کردن افراد یافت نشد"};
+            const user : IUser | null = await UserModel.findOne({username});
+            if(!user)throw {status : 400 , state : "ناموفق" , message :"کاربر مورد نظر جهت دعوت به تیم یافت نشد" };
+            const inviteTeam : boolean = await finderUserInTeam(teamID , user._id);
+            if(inviteTeam)throw {status : 400 , state : "ناموفق" , message : "کاربر مورد نظر قبلا در تیم عضو شد"};
+            const request  = {
+                caller : req.user?.username,
+                requestDate : new Date(),
+                teamID  ,
+                status : "pending"
+            }
+            const updateUser = await UserModel.updateOne<IUser["inviteRequests"]>({username} , {$push : {
+                inviteRequests : request
+            }});
+            if(updateUser.modifiedCount == 0)throw {status : 400 , state : "ناموفق" ,message : "دعوت مخاطب انجام نشد"};
+            res.status(200).json({
+                status : 200 ,
+                state : "موفق" ,
+                message : "دعوت نامه ارسال شد"
+            });
+            
+
+
+        } catch (error) {
+            next(error)
+        }
+    };
+    static async removeTeamById(req : Request , res : Response , next : NextFunction): Promise<void>{
+        try {
+            const id : string = req.params.id ;
+            const team: ITeam | null = await TeamModel.findById({_id : id});
+            if(!team)throw{status : 404 , state : "ناموفق" , message : "تیمی یافت نشد"};
+            const removeTeam = await TeamModel.deleteOne({_id : id});
+            if(removeTeam.deletedCount == 0 ) throw {status : 500 , state : "ناموفق" , message : "حذف تیم انجام نشد"};
+            res.status(200).json({
+                status : 200 ,
+                state : "موفق",
+                message : "تیم حدف  شد"
+
+            })
+        } catch (error) {
+            next(error)
+        }
+    };
     updateTeam(){};
 }

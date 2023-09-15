@@ -4,6 +4,9 @@ import { General } from "../types/enum";
 import fs from "fs"
 import path from "path";
 import { Request,NextFunction, Response, request } from "express";
+import { ITeam, IUser } from "../types/Schema.Types";
+import { TeamModel } from "../model/team.schema";
+import mongoose, { ObjectId } from "mongoose";
 
 export function hashString(str : string) : string {
     const salt : string = genSaltSync(10);
@@ -31,4 +34,14 @@ export function createUploadPath(): string{
 };
 export function createLinkforFile(fileAddres : string , req : Request) : string {
     return req.protocol+ "://" + req.get("host") + "/" + fileAddres.replace(/[\\\\]/gm , "/");
-}
+};
+export  function finderUserInTeam(teamID : string , userID : ObjectId): boolean {
+    const result  = TeamModel.findOne({
+        $or : [{owner : userID},{user : userID}],
+        _id : teamID
+    });
+    
+    
+    return !!result;
+    
+};

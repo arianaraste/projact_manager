@@ -11,4 +11,6 @@ export const router : Router = Router();
 router.post("/create" , checkLogin , teamValidation() , ExpressValidationResult , TeamController.creatTeam)
 router.get("/list" , checkLogin , TeamController.getListTeam);
 router.get("/me" , checkLogin , TeamController.getMyTeam)
+router.get("/invite/:teamID/:username" , checkLogin , TeamController.inviteUserToTeam);
 router.get("/:id" , checkLogin , idValidation() , ExpressValidationResult , TeamController.getTeamById);
+router.delete("/remove/:id" , checkLogin , idValidation() , ExpressValidationResult , TeamController.removeTeamById);

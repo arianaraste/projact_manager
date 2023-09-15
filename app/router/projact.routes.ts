@@ -13,6 +13,6 @@ export const router : Router = Router();
 router.post("/create" ,fileUpload(), checkLogin ,creatProjectValidation(),ExpressValidationResult,imgUpload,ProjactController.creatProjact);
 router.get("/list" , checkLogin ,ProjactController.getAllProjact);
 router.get("/get/:id" , checkLogin, idValidation() , ExpressValidationResult ,ProjactController.getProjactById)
-router.get("/remove/:id" , checkLogin, idValidation() , ExpressValidationResult ,ProjactController.removeProjact)
+router.delete("/remove/:id" , checkLogin, idValidation() , ExpressValidationResult ,ProjactController.removeProjact)
 router.put("/update/:id" , checkLogin, idValidation() , ExpressValidationResult ,ProjactController.updateProjact)
 router.patch("/update-projectimage/:id" , fileUpload() ,checkLogin, idValidation() , ExpressValidationResult,imgUpload,ProjactController.updateProjectImg)

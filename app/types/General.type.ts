@@ -12,4 +12,5 @@ export type UpdateProject = {
     title : IProjact["title"],
     text : IProjact["text"],
     tags : IProjact["tags"]
-}
+};
+export type Status = "pending" | "accepted" | "rejected";

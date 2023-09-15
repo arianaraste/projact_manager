@@ -1,5 +1,11 @@
 import mongoose, { DefaultType, Document, ObjectId } from "mongoose";
-
+import { Status } from "./General.type";
+export interface InviteRequest extends Document {
+    teamID : ObjectId , 
+    caller : string,
+    requestDate : Date,
+    status : Status,
+}
 export interface IUser extends Document {
     firstname : string ,
     lastname : string ,
@@ -11,7 +17,8 @@ export interface IUser extends Document {
     skills : string[] ,
     teams : string[],
     token : string,
-    profile_image : string
+    profile_image : string,
+    inviteRequests : InviteRequest[]
 };
 export interface ITeam extends Document {
     name : string,
