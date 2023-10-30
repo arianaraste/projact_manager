@@ -3,7 +3,7 @@ import { TeamModel } from "../../model/team.schema";
 import { ITeam, IUser, InviteRequest } from "../../types/Schema.Types";
 import { UserModel } from "../../model/user.schema";
 import { finderUserInTeam } from "../../modules/function";
-import mongoose, { ObjectId, isObjectIdOrHexString, isValidObjectId } from "mongoose";
+import mongoose, { ObjectId, Types, isObjectIdOrHexString, isValidObjectId } from "mongoose";
 export class TeamController {
     static async creatTeam(req : Request , res : Response , next : NextFunction) : Promise<void>{
         try {
@@ -18,7 +18,7 @@ export class TeamController {
             if(!createTeam)throw {status : 500 , state : "ناموفق" , message : "ایجاد تیم با مشکل مواجه شد"};
             res.status(201).json({
                 status : 201 ,
-                state  : "ناموفق" ,
+                state  : "موفق" ,
                 message : "تیم ایجاد شد"
             })            
         } catch (error) {
@@ -55,9 +55,7 @@ export class TeamController {
     };
     static async getMyTeam(req : Request , res  :Response , next : NextFunction ): Promise<void>{
         try {
-            const UserId = new mongoose.Types.ObjectId("123")
-            //console.log(UserId);
-            console.log(typeof UserId);
+            const UserId : ObjectId = req.user?._id
             
             
             const MyTeam: ITeam[] | null = await TeamModel.find({$or : [
@@ -77,18 +75,23 @@ export class TeamController {
     
     static async inviteUserToTeam(req : Request , res : Response , next : NextFunction) : Promise<void>{
         try {
-            const userID : ObjectId  = req.user?._id;            
-            const username = req.params.username
-            console.log(req.params.teamID);
-            const teamID =  req.params.teamID
+            const username : String  = req.params.username
+            const teamID : Types.ObjectId = new Types.ObjectId(req.params.teamID)         
+            const userID : Types.ObjectId = req.user?._id
+
+            console.log(userID);
+            
+            
+            
+            const team : boolean = await finderUserInTeam(teamID,userID);
            
-            
-            
-           const team : boolean = await finderUserInTeam(teamID,userID);
+           
             if(!team)throw {status : 400 , state : "ناموفق" , message : "تیمی جهت دعوت کردن افراد یافت نشد"};
             const user : IUser | null = await UserModel.findOne({username});
             if(!user)throw {status : 400 , state : "ناموفق" , message :"کاربر مورد نظر جهت دعوت به تیم یافت نشد" };
             const inviteTeam : boolean = await finderUserInTeam(teamID , user._id);
+            
+            
             if(inviteTeam)throw {status : 400 , state : "ناموفق" , message : "کاربر مورد نظر قبلا در تیم عضو شد"};
             const request  = {
                 caller : req.user?.username,

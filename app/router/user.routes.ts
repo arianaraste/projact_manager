@@ -10,5 +10,12 @@ export const router : Router = Router();
 
 router.get("/profile" , checkLogin , UserController.getProfile)
 router.post("/profile" ,checkLogin,validitionEditProfile(), ExpressValidationResult ,UserController.editProfile);
-router.post("/profile-image" ,fileUpload() ,checkLogin , imgUpload , UserController.uploadProfileImage);
+router.post("/profile-image" ,
+fileUpload() ,
+checkLogin ,
+imgUpload ,
+UserController.uploadProfileImage ,
+router.get("/requests" , checkLogin ,UserController.getAllRequest));
+router.get("/requests/:status" , checkLogin ,UserController.getRequestByStatus);
+router.get("/change-request-status/:id/:status" , checkLogin ,UserController.changeStatusRequrest);
 

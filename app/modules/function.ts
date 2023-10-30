@@ -6,7 +6,7 @@ import path from "path";
 import { Request,NextFunction, Response, request } from "express";
 import { ITeam, IUser } from "../types/Schema.Types";
 import { TeamModel } from "../model/team.schema";
-import mongoose, { ObjectId } from "mongoose";
+import mongoose, { ObjectId, Types } from "mongoose";
 
 export function hashString(str : string) : string {
     const salt : string = genSaltSync(10);
@@ -35,13 +35,16 @@ export function createUploadPath(): string{
 export function createLinkforFile(fileAddres : string , req : Request) : string {
     return req.protocol+ "://" + req.get("host") + "/" + fileAddres.replace(/[\\\\]/gm , "/");
 };
-export  function finderUserInTeam(teamID : string , userID : ObjectId): boolean {
-    const result  = TeamModel.findOne({
-        $or : [{owner : userID},{user : userID}],
+export  async function finderUserInTeam(teamID : Types.ObjectId , userID : Types.ObjectId ):Promise<boolean> {
+    const result  = await TeamModel.findOne({
+        $or : [{user : userID},{owner : userID}],
         _id : teamID
     });
     
+    console.log(!!result + "!");
+    
     
     return !!result;
+    
     
 };
