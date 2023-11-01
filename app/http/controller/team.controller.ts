@@ -4,6 +4,7 @@ import { ITeam, IUser, InviteRequest } from "../../types/Schema.Types";
 import { UserModel } from "../../model/user.schema";
 import { finderUserInTeam } from "../../modules/function";
 import mongoose, { ObjectId, Types, isObjectIdOrHexString, isValidObjectId } from "mongoose";
+import { off } from "process";
 export class TeamController {
     static async creatTeam(req : Request , res : Response , next : NextFunction) : Promise<void>{
         try {
@@ -132,5 +133,31 @@ export class TeamController {
             next(error)
         }
     };
-    updateTeam(){};
+    static async updateTeam(req : Request , res : Response , next : NextFunction):Promise<void>{
+        try {
+            
+            const user : ObjectId = req.user?._id;
+            const teamID : Types.ObjectId = new Types.ObjectId(req.params.teamID);
+            const data = {...req.body};
+    
+            Object.keys(data).forEach(key => {
+                if(!data[key]) delete data[key];
+                if(["" , " " , undefined , null].includes(data[key])) delete data[key];
+            });
+            const team : ITeam | null = await TeamModel.findOne({owner : user , _id : teamID});
+            if(!team) throw {status : 404 , state : "ناموفق" , message : "تیمی یافت نشد"};
+            const update = await TeamModel.updateOne({_id : teamID} , {$set : data});
+            if(update.modifiedCount == 0) throw {status : 500 , state : "ناموفق" , message : " بروزرسانی تیک انجام نشد "};
+            res.status(200).json({
+                status : 200 ,
+                state : "موفق",
+                messaeg : "بروزرسانی تیم باموفقیت  انجام شد"
+            })
+
+        } catch (error) {
+            console.log(error);
+            
+            next(error)
+        }
+    };
 }

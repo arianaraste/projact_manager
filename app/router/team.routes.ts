@@ -14,3 +14,4 @@ router.get("/me" , checkLogin , TeamController.getMyTeam)
 router.get("/invite/:teamID/:username" , checkLogin , TeamController.inviteUserToTeam);
 router.get("/:id" , checkLogin , idValidation() , ExpressValidationResult , TeamController.getTeamById);
 router.delete("/remove/:id" , checkLogin , idValidation() , ExpressValidationResult , TeamController.removeTeamById);
+router.put("/update/:teamID" , checkLogin  , ExpressValidationResult , TeamController.updateTeam);

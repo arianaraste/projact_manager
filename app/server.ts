@@ -33,6 +33,8 @@ export class ApplicationClass {
             console.log("connected to DB");
             
         }).catch((err : any)=>{
+            console.log(err);
+            
             const DB_Error : ERR_Type = {
                 err_type : "DB ERROR" , 
                 status : err?.status ,
