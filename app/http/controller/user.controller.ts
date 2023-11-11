@@ -73,7 +73,22 @@ export class UserController{
     static async getAllRequest(req : Request , res : Response , next : NextFunction){
         try {
             const user : ObjectId = req.user?._id;
-            const requests : IUser["inviteRequests"] | null = await UserModel.findById(user , {inviteRequests: 1});
+            const requests : IUser["inviteRequests"] | null = await UserModel.aggregate([
+                {
+                    $match : {_id : user}
+                },
+                {
+                    $project : {inviteRequests : 1}
+                },
+                {
+                    $lookup : {
+                        from : "users" ,
+                        localField : "inviteRequests.caller" ,
+                        foreignField : "username",
+                        as : "inviteRequest.caller"
+                    }
+                }
+            ]);
         
             
             return res.json({

@@ -59,10 +59,36 @@ export class TeamController {
             const UserId : ObjectId = req.user?._id
             
             
-            const MyTeam: ITeam[] | null = await TeamModel.find({$or : [
-                {owner : UserId},
-                {member : UserId}
-            ]})
+            const MyTeam: ITeam[] | null = await TeamModel.aggregate([
+                {
+                    $match : {
+                      $or: [{ owner: UserId }, { users: UserId }]
+                    },
+                  },
+                  {
+                    $lookup : {
+                      from : "users",
+                      localField : "owner",
+                      foreignField : "_id",
+                      as : "owner"
+                    }
+                  },
+                  {
+                    $project : {
+                      "owner.roles" : 0,
+                      "owner.password" : 0,
+                      "owner.token" : 0,
+                      "owner.teams" : 0,
+                      "owner.skills" : 0,
+                      "owner.inviteRequests" : 0,
+                    }
+                  },
+                  {
+                    $unwind : "$owner"
+                  }
+                
+                
+            ]);
             if(!MyTeam)throw{status : 404 , state : "ناموفق" , message : "شما عضو تیمی نیستید"};
             res.status(200).json({
                 status : 200 ,
@@ -73,8 +99,8 @@ export class TeamController {
             next(error)
         }
     };
-    
     static async inviteUserToTeam(req : Request , res : Response , next : NextFunction) : Promise<void>{
+        
         try {
             const username : String  = req.params.username
             const teamID : Types.ObjectId = new Types.ObjectId(req.params.teamID)         
@@ -154,7 +180,7 @@ export class TeamController {
                 messaeg : "بروزرسانی تیم باموفقیت  انجام شد"
             })
 
-        } catch (error) {
+        }catch (error) {
             console.log(error);
             
             next(error)
